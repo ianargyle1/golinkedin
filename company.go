@@ -1,6 +1,7 @@
 package golinkedin
 
 import (
+	"fmt"
 	"encoding/json"
 	"net/url"
 	"strconv"
@@ -199,6 +200,8 @@ func (ln *Linkedin) CompanyByName(name string) (*CompanyNode, error) {
 		"q":             {"universalName"},
 		"universalName": {name},
 	})
+	
+	fmt.Println(raw)
 
 	if err != nil {
 		return nil, err
