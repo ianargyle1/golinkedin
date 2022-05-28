@@ -201,7 +201,7 @@ func (ln *Linkedin) CompanyByName(name string) (*CompanyNode, error) {
 		"universalName": {name},
 	})
 	
-	fmt.Println(raw)
+	fmt.Println(string(raw))
 
 	if err != nil {
 		return nil, err
