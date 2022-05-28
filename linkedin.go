@@ -21,7 +21,7 @@ const (
 	ErrSessionInvalid = "Linkedin session invalid"
 
 	basePath  = "https://www.linkedin.com"
-	userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0"
+	userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36"
 )
 
 var apiBase string = basePath + "/voyager/api"
@@ -42,6 +42,15 @@ func New() *Linkedin {
 func (ln *Linkedin) SetCookieStr(c string) {
 	header := http.Header{}
 	header.Add("Cookie", c)
+	request := http.Request{Header: header}
+
+	ln.SetCookies(request.Cookies())
+}
+
+// Set Linkedin csrf token string
+func (ln *Linkedin) SetCsrfStr(c string) {
+	header := http.Header{}
+	header.Add("csrf-token", c)
 	request := http.Request{Header: header}
 
 	ln.SetCookies(request.Cookies())
@@ -87,7 +96,6 @@ func (ln *Linkedin) get(path string, q url.Values) ([]byte, error) {
 	req.Header.Set("Upgrade-Insecure-Requests", "1")
 	req.Header.Set("x-restli-protocol-version", "2.0.0")
 	req.Header.Set("User-Agent", userAgent)
-	req.Header.Set("csrf-token", ln.jsessionid())
 
 	for _, cookie := range ln.cookies {
 		req.AddCookie(cookie)
@@ -110,14 +118,4 @@ func (ln *Linkedin) get(path string, q url.Values) ([]byte, error) {
 	}
 
 	return raw, nil
-}
-
-func (ln *Linkedin) jsessionid() string {
-	for _, c := range ln.cookies {
-		if c.Name == "JSESSIONID" {
-			return c.Value
-		}
-	}
-
-	return ""
 }
