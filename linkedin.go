@@ -30,6 +30,7 @@ var apiBase string = basePath + "/voyager/api"
 type Linkedin struct {
 	client  *http.Client
 	cookies []*http.Cookie
+	csrf_token string
 }
 
 // New initiate new Linkedin object
@@ -49,11 +50,7 @@ func (ln *Linkedin) SetCookieStr(c string) {
 
 // Set Linkedin csrf token string
 func (ln *Linkedin) SetCsrfStr(c string) {
-	header := http.Header{}
-	header.Add("csrf-token", c)
-	request := http.Request{Header: header}
-
-	ln.SetCookies(request.Cookies())
+	ln.csrf_token = c
 }
 
 // SetCookies set Linkedin session cookies from parsed cookie string
@@ -96,6 +93,7 @@ func (ln *Linkedin) get(path string, q url.Values) ([]byte, error) {
 	req.Header.Set("Upgrade-Insecure-Requests", "1")
 	req.Header.Set("x-restli-protocol-version", "2.0.0")
 	req.Header.Set("User-Agent", userAgent)
+	req.Header.Set("csrf-token", ln.csrf_token)
 
 	for _, cookie := range ln.cookies {
 		req.AddCookie(cookie)
