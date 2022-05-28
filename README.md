@@ -42,7 +42,7 @@ Feel free to fork and contribute!
 This package require go version 1.14 or above.
 Make sure you have go modules activated.
 ```sh
-$ GO111MODULE=on go get github.com/tamboto2000/golinkedin
+$ GO111MODULE=on go get github.com/ianargyle1/golinkedin
 ```
 
 ### Full Profile Lookup Example
